@@ -1,0 +1,149 @@
+{% style %}
+    .nws-announcement {
+      {% if section.settings.slct-bg == 'gradient' %}background:{{ section.settings.section_background_gradient }};{% endif %}
+      {% if section.settings.slct-bg == 'solid' %}background:{{ section.settings.section-background }};{% endif %}
+      {% if section.settings.slct-bg == 'image' %}background-image:url({{ section.settings.bg_img | img_url: 'master'}});
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center; {% endif %}
+    }
+    .nws-announcement-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      height: {{ section.settings.announcement_height }}px;
+      overflow: hidden;
+    }
+  .nws-announcment-body {
+    display: flex;
+    animation: nws-msg-slide {{ section.settings.animation_speed }}s linear infinite running;
+    flex: none;
+  }
+  .nws-slider-text {
+    display: inline-block;
+    transition: all 0.2s ease;
+    text-align: center;
+    padding: 0 40px;
+    font-size: 12px;
+    line-height: normal;
+    text-transform: uppercase;
+    color: #13171a;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+  .nws-slider-text p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .nws-announcment-body .nws-slider-text:before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: #13171a;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @keyframes nws-msg-slide {
+    from {
+      transform: translate(0);
+    }
+    to {
+      transform: translate(-50%);
+    }
+  }
+{% endstyle %}
+<!-- nws-announcement-bar.liquid -->
+<div class="nws-announcement{% if section.settings.section-extra-class != blank %} {{ section.settings.section-extra-class }}{% endif %}">
+  <div class="nws-announcement-container">
+    <div class="nws-announcment-body">
+      {% for block in section.blocks %}
+        <div class="nws-slider-text">{{ block.settings.message }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+"name": "Nws Announcement Bar",
+"settings": [
+  {
+      "type": "select",
+      "options": [
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "solid", "label": "Background Solid Color"},
+        { "value": "image", "label": "Background Image"}
+        ],
+      "id": "slct-bg",
+      "default": "solid",
+      "label": "Section Background Type"
+    },
+    {
+      "type": "color_background",
+      "label": "Section Background Gradient",
+      "id": "section_background_gradient"
+    },
+    {
+      "type": "color",
+      "id": "section-background",
+      "info": "Background",
+      "label": "Section Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_img",
+      "info": "Background Image",
+      "label": "BG Image"
+    },
+     {
+      "type": "text",
+      "id": "section-extra-class",
+      "info": "Add section class (without.). Use spaces to add multiple classes",
+      "label": "Section Class"
+    },
+    {
+      "type": "range",
+      "max": 100,
+      "min": 5,
+      "default": 38,
+      "unit": "px",
+      "id": "announcement_height",
+      "label": "Announcement Height"
+    },
+    {
+      "type": "range",
+      "max": 100,
+      "min": 5,
+      "default": 35,
+      "unit": "s",
+      "id": "animation_speed",
+      "label": "Animation Speed"
+    }
+],
+
+"blocks": [
+     {
+    "type": "gallery",
+    "name": "Add Announcement",
+    "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Announcement Message"
+    }
+    ]
+  }
+],
+
+"presets": [
+{
+"name": "Nws Announcement Bar",
+"category": "Nws Custom Section"
+}
+]
+}
+{% endschema %}
